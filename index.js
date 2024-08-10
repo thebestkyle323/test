@@ -80,10 +80,10 @@ async function sendTgMessage(data) {
     }
     return `🔥 [${o.desc}](${url}) ${(o.desc_extr / 10000).toFixed(2)} 万`;
   });
-  text.unshift(
+  text.unshift(微博热搜
     `${dayjs().format(
       'YYYY-MM-DD HH:mm:ss',
-    )} 的微博热搜([查看更多]())`,
+    )} ([查看更多]())`,
   );
   await bot.telegram.sendMessage(CHANNEL_ID, text.join('\n'), {
     parse_mode: 'Markdown',
