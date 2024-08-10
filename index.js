@@ -17,50 +17,6 @@ const bot = new Telegraf(TOKEN);
 
 let RETRY_TIME = 5;
 
-async function saveRawJson(data) {
-  const date = dayjs().format('YYYY-MM-DD');
-  const fullPath = `./api/${date}.json`;
-  const words = data.map((o) => ({
-    title: o.desc,
-    category: o.category,
-    description: o.description,
-    url: o.scheme,
-    hot: o.desc_extr,
-    ads: !!o.promotion,
-  }));
-  let wordsAlreadyDownload = [];
-  try {
-    await fs.stat(fullPath);
-    const content = await fs.readFile(fullPath);
-    wordsAlreadyDownload = JSON.parse(content);
-  } catch (err) {
-    // file not exist
-  }
-  const allHots = _.uniqBy(_.concat(words, wordsAlreadyDownload), 'title');
-  await fs.writeFile(fullPath, JSON.stringify(allHots));
-}
-
-async function writeMDFile() {
-  const date = dayjs().format('YYYY-MM-DD');
-  const fullPath = `./archives/${date}.md`;
-  const jsonPath = `./api/${date}.json`;
-  const words = await fs.readJSON(jsonPath);
-  await fs.writeFile(fullPath, `# ${date} 微博热搜 \n`);
-  await fs.writeFile(
-    fullPath,
-    words
-      .map((item, index) => {
-        return `${index + 1}. [${item.title}](${item.url}) ${
-          item.category ? `\`${item.category?.trim()}\`` : ''
-        } \n`;
-      })
-      .join('\n'),
-    {
-      flag: 'a',
-    },
-  );
-}
-
 async function sendTgMessage(data) {
   const ranks = [
     '0️⃣1️⃣', '0️⃣2️⃣', '0️⃣3️⃣', '0️⃣4️⃣', '0️⃣5️⃣', '0️⃣6️⃣', '0️⃣7️⃣', '0️⃣8️⃣', '0️⃣9️⃣', '1️⃣0️⃣',
@@ -128,8 +84,6 @@ async function bootstrap() {
             item.category = category || item.category;
             item.description = desc || item.description;
           }
-          await saveRawJson(items);
-          await writeMDFile();
           await sendTgMessage(items);
         }
       }
