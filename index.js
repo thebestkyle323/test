@@ -85,9 +85,9 @@ async function sendTgMessage(data) {
     
   });
   text.unshift(
-    `**微博实时热搜**\n ${dayjs().format(
+    `**微博实时热搜** ${dayjs().format(
       'YYYY-MM-DD HH:mm:ss',
-    )} ([查看更多]())`,
+    )} ([查看更多]())\n`,
   );
   await bot.telegram.sendMessage(CHANNEL_ID, text.join('\n'), {
     parse_mode: 'Markdown',
