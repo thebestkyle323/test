@@ -80,8 +80,8 @@ async function sendTgMessage(data) {
     }
     return `🔥 [${o.desc}](${url}) ${(o.desc_extr / 10000).toFixed(2)} 万`;
   });
-  text.unshift(微博热搜
-    `${dayjs().format(
+  text.unshift(
+    `微博实时热搜 ${dayjs().format(
       'YYYY-MM-DD HH:mm:ss',
     )} ([查看更多]())`,
   );
