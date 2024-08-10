@@ -63,14 +63,16 @@ async function writeMDFile() {
 
 async function sendTgMessage(data) {
   const ranks = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
-  const text = data.splice(1, 30).map((o, i) => {
+
+  // Filter out items with promotion
+  const filteredData = data.filter(o => !o.promotion);
+
+  const text = filteredData.splice(1, 30).map((o, i) => {
     const containerid = encodeURIComponent(
       new URL(o.scheme).searchParams.get('containerid'),
     );
     const url = `https://m.weibo.cn/search?containerid=${containerid}`;
-    if (o.promotion) {
-      return `💰 [${o.desc}](${url}) ${(o.desc_extr / 10000).toFixed(2)} 万`;
-    }
+    
     if (ranks[i]) {
       return `${ranks[i]} [${o.desc}](${url}) ${(o.desc_extr / 10000).toFixed(
         2,
