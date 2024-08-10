@@ -81,7 +81,7 @@ async function sendTgMessage(data) {
 
     // 检查 desc_extr 是否为有效数字
     const hotValue = parseFloat(o.desc_extr);
-    const hotText = isNaN(hotValue) ? '' : `${(hotValue / 10000).toFixed(2)} 万`;
+    const hotText = isNaN(hotValue) ? '' : `| ${(hotValue / 10000).toFixed(2)} 万`;
 
     if (ranks[i]) {
       return `${ranks[i]} [${o.desc}](${url}) ${hotText}`;
