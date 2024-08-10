@@ -77,7 +77,7 @@ async function sendTgMessage(data) {
     const containerid = encodeURIComponent(
       new URL(o.scheme).searchParams.get('containerid'),
     );
-    const url = `https://m.weibo.cn/news?containerid=${containerid}`;
+    const url = `https://m.weibo.cn/search?containerid=${containerid}`;
 
     // 检查 desc_extr 是否为有效数字
     const hotValue = parseFloat(o.desc_extr);
