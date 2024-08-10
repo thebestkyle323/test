@@ -34,7 +34,7 @@ async function saveRawJson(data) {
     const content = await fs.readFile(fullPath);
     wordsAlreadyDownload = JSON.parse(content);
   } catch (err) {
-    // file not exsit
+    // file not exist
   }
   const allHots = _.uniqBy(_.concat(words, wordsAlreadyDownload), 'title');
   await fs.writeFile(fullPath, JSON.stringify(allHots));
@@ -62,13 +62,15 @@ async function writeMDFile() {
 }
 
 async function sendTgMessage(data) {
-  const ranks = ['0️⃣1️⃣', '0️⃣2️⃣', '0️⃣3️⃣', '0️⃣4️⃣', '0️⃣5️⃣', '0️⃣6️⃣', '0️⃣7️⃣', '0️⃣8️⃣', '0️⃣9️⃣', '1️⃣0️⃣',
-'1️⃣1️⃣', '1️⃣2️⃣', '1️⃣3️⃣', '1️⃣4️⃣', '1️⃣5️⃣', '1️⃣6️⃣', '1️⃣7️⃣', '1️⃣8️⃣', '1️⃣9️⃣', '2️⃣0️⃣',
-'2️⃣1️⃣', '2️⃣2️⃣', '2️⃣3️⃣', '2️⃣4️⃣', '2️⃣5️⃣', '2️⃣6️⃣', '2️⃣7️⃣', '2️⃣8️⃣', '2️⃣9️⃣', '3️⃣0️⃣',
-'3️⃣1️⃣', '3️⃣2️⃣', '3️⃣3️⃣', '3️⃣4️⃣', '3️⃣5️⃣', '3️⃣6️⃣', '3️⃣7️⃣', '3️⃣8️⃣', '3️⃣9️⃣', '4️⃣0️⃣',
-'4️⃣1️⃣', '4️⃣2️⃣', '4️⃣3️⃣', '4️⃣4️⃣', '4️⃣5️⃣', '4️⃣6️⃣', '4️⃣7️⃣', '4️⃣8️⃣', '4️⃣9️⃣', '5️⃣0️⃣'];
+  const ranks = [
+    '0️⃣1️⃣', '0️⃣2️⃣', '0️⃣3️⃣', '0️⃣4️⃣', '0️⃣5️⃣', '0️⃣6️⃣', '0️⃣7️⃣', '0️⃣8️⃣', '0️⃣9️⃣', '1️⃣0️⃣',
+    '1️⃣1️⃣', '1️⃣2️⃣', '1️⃣3️⃣', '1️⃣4️⃣', '1️⃣5️⃣', '1️⃣6️⃣', '1️⃣7️⃣', '1️⃣8️⃣', '1️⃣9️⃣', '2️⃣0️⃣',
+    '2️⃣1️⃣', '2️⃣2️⃣', '2️⃣3️⃣', '2️⃣4️⃣', '2️⃣5️⃣', '2️⃣6️⃣', '2️⃣7️⃣', '2️⃣8️⃣', '2️⃣9️⃣', '3️⃣0️⃣',
+    '3️⃣1️⃣', '3️⃣2️⃣', '3️⃣3️⃣', '3️⃣4️⃣', '3️⃣5️⃣', '3️⃣6️⃣', '3️⃣7️⃣', '3️⃣8️⃣', '3️⃣9️⃣', '4️⃣0️⃣',
+    '4️⃣1️⃣', '4️⃣2️⃣', '4️⃣3️⃣', '4️⃣4️⃣', '4️⃣5️⃣', '4️⃣6️⃣', '4️⃣7️⃣', '4️⃣8️⃣', '4️⃣9️⃣', '5️⃣0️⃣'
+  ];
 
-  // Filter out items with promotion
+  // 过滤掉带有推广的信息
   const filteredData = data.filter(o => !o.promotion);
 
   const text = filteredData.splice(1, 50).map((o, i) => {
@@ -76,14 +78,16 @@ async function sendTgMessage(data) {
       new URL(o.scheme).searchParams.get('containerid'),
     );
     const url = `https://m.weibo.cn/search?containerid=${containerid}`;
-    
+
+    // 检查 desc_extr 是否为有效数字
+    const hotValue = parseFloat(o.desc_extr);
+    const hotText = isNaN(hotValue) ? 'N/A' : `${(hotValue / 10000).toFixed(2)} 万`;
+
     if (ranks[i]) {
-      return `${ranks[i]} [${o.desc}](${url}) ${(o.desc_extr / 10000).toFixed(
-        2,
-      )} 万`;
+      return `${ranks[i]} [${o.desc}](${url}) ${hotText}`;
     }
-    
-  });
+  }).filter(Boolean); // 过滤掉任何 undefined 值
+
   text.unshift(
     `**微博实时热搜** ${dayjs().format(
       'YYYY-MM-DD HH:mm:ss',
