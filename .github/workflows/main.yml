@@ -1,14 +1,20 @@
 name: schedule
 
+on:
+  schedule:
+    - cron: "0 * * * *"
 
+  workflow_dispatch:
 
 jobs:
-  build:
+  send_to_channels:
     runs-on: ubuntu-latest
 
     env:
+      TOKEN: ${{ secrets.TOKEN }}
+      CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
+     
       TZ: Asia/Shanghai
-
     steps:
       - name: Checkout Git Source
         uses: actions/checkout@v2
@@ -25,6 +31,5 @@ jobs:
         run: yarn start
         env:
           TOKEN: ${{ secrets.TOKEN }}
-          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-
-     
+          CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
+          
