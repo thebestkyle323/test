@@ -47,7 +47,7 @@ async function sendTgMessage(data) {
   text.unshift(
     `**微博实时热搜** ${dayjs().format(
       'YYYY-MM-DD HH:mm:ss',
-    )} ([查看更多](https://nav.iosfans.club))\n`,
+    )} ([查看更多](https://t.me/Weibohotlist))\n`,
   );
 
   // 将图片和文本一起发送到第一个频道
